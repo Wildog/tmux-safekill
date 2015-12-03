@@ -9,8 +9,12 @@ function safe_end_procs {
         pane_id=$(echo "$pane_set" | awk -F " " '{print $1}')
         pane_proc=$(echo "$pane_set" | awk -F " " '{print tolower($2)}')
         cmd="C-c"
-        if [[ "$pane_proc" == "vim" ]]; then
+        if [[ "$pane_proc" == "vim" ]] || [[ "$pane_proc" == "vi" ]]; then
             cmd='":qa" Enter'
+        elif [[ "$pane_proc" == "mc" ]]; then
+            cmd='"exit" Enter "exit" Enter'
+        elif [[ "$pane_proc" == "htop" ]]; then
+            cmd='"q" "exit" Enter'
         elif [[ "$pane_proc" == "man" ]] || [[ "$pane_proc" == "less" ]]; then
             cmd='"q"'
         elif [[ "$pane_proc" == "bash" ]] || [[ "$pane_proc" == "zsh" ]] || [[ "$pane_proc" == "fish" ]]; then
@@ -21,12 +25,15 @@ function safe_end_procs {
             cmd='Enter "\q"'
         fi
         echo $cmd | xargs tmux send-keys -t "$pane_id"
+        if [[ "$pane_proc" == "vim" ]] || [[ "$pane_proc" == "vi" ]]; then
+            echo '"exit" Enter' | xargs tmux send-keys -t "$pane_id"
+        fi
     done
     IFS="$old_ifs"
 }
 
 safe_end_tries=0
-while [ $safe_end_tries -lt 3 ]; do
+while [ $safe_end_tries -lt 1 ]; do
     safe_end_procs
     safe_end_tries=$[$safe_end_tries+1]
     sleep 0.75

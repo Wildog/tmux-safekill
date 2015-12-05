@@ -10,7 +10,7 @@ function safe_end_procs {
         pane_proc=$(echo "$pane_set" | awk -F " " '{print tolower($2)}')
         cmd="C-c"
         if [[ "$pane_proc" == "vim" ]] || [[ "$pane_proc" == "vi" ]]; then
-            cmd='":qa" Enter'
+            cmd='Escape ":qa" Enter'
         elif [[ "$pane_proc" == "mc" ]]; then
             cmd='"exit" Enter "exit" Enter'
         elif [[ "$pane_proc" == "htop" ]]; then
@@ -26,6 +26,7 @@ function safe_end_procs {
         fi
         echo $cmd | xargs tmux send-keys -t "$pane_id"
         if [[ "$pane_proc" == "vim" ]] || [[ "$pane_proc" == "vi" ]]; then
+            sleep 0.1
             echo '"exit" Enter' | xargs tmux send-keys -t "$pane_id"
         fi
     done

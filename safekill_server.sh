@@ -12,7 +12,7 @@ function safe_end_procs {
         if [[ "$pane_proc" == "vim" ]] || [[ "$pane_proc" == "vi" ]]; then
             cmd='Escape ":qa" Enter'
         elif [[ "$pane_proc" == "mc" ]]; then
-            cmd='"exit" Enter "exit" Enter'
+            cmd='F10 "exit" Enter'
         elif [[ "$pane_proc" == "htop" ]]; then
             cmd='"q" "exit" Enter'
         elif [[ "$pane_proc" == "man" ]] || [[ "$pane_proc" == "less" ]]; then
